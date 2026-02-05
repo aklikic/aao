@@ -1,0 +1,40 @@
+# Eclipse
+.classpath
+.project
+.settings/
+
+# Intellij
+.idea
+!.idea/
+.idea/*
+!.idea/runConfigurations/Run_locally.xml
+*.iml
+*.iws
+
+# Mac
+.DS_Store
+
+# VSCode
+.vscode
+
+# Maven
+log/
+target/
+effective-pom.xml
+
+#local db
+db.mv.db
+
+akka-context/
+
+.git-bak
+
+.github-bak
+
+app.log
+
+setup.txt
+
+*.pem
+
+hub-ant-spoke-all-options.md

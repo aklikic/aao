@@ -121,7 +121,7 @@ graph TB
     SRVS --> |private<br>egress| AKKA_PEERING
     AKKA_PEERING <--> CUST_PEERING
 
-    ADMIN --> |public<br>ingress|HUB
+    ADMIN --> |VPN|HUB
 
     INT_SRVS --> |public<br>ingress|HUB
     USER --> |public<br>ingress|HUB

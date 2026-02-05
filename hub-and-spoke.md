@@ -107,15 +107,13 @@ graph TB
             AKKA_MGMT[Akka Management]
         end
         CLOUD_NAT[Cloud NAT]
-        TELEPORT[Teleport]
         INT_GW[Internet GW<br>0.0.0.0/0]
         AKKA_PEERING[Peering]
     end
 
-    AKKA_MGMT <--> |public<br>egress/ingress| TELEPORT
-    TELEPORT --> |public<br>egress| CLOUD_NAT
+    AKKA_MGMT <--> |public<br>egress/ingress| CLOUD_NAT
     CLOUD_NAT --> |public<br>egress| INT_GW
-    INT_GW --> |public<br>egress| AKKA_FED_PLAN
+    INT_GW --> |public<br>egress/ingress| AKKA_FED_PLAN
     INT_GW --> |public<br>egress| INT_SRVS
     SRVS --> |public<br>egress| CLOUD_NAT
 

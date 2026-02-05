@@ -71,7 +71,7 @@ graph TB
 # Option 2 - Cloud NAT based egress, NO Akka VPC public ingress 
 
 - Akka VPC `public egress` via Cloud NAT and Internet GW
-  - Your Akka Services and Teleport gateway for Akka Management (reverse tunneling)
+  - Your Akka Services and Akka Management with reverse tunneling
 - **NO** Akka VPC `public ingress`
 - Your VPC Centralised HUB based `public ingress`
   - Akka CLI, External Users and Services

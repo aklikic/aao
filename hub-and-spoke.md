@@ -1,13 +1,15 @@
 
-# Option 1 - Cloud NAT based egress, Akka Management access via public ingress with IP whitelisting
+# Option 1 - Cloud NAT based egress, Akka Kubernetes Engine access via public ingress with IP whitelisting
 
 - Akka VPC `public egress` via Cloud NAT and Internet GW
   - Your Akka Services
-  - Akka Management egress to Akka federation plane
+  - Akka Kubernetes Engine egress to Akka federation plane
 - Akka VPC `public ingress`
-  - Akka federation plane to Akka Management via public endpoint and IP whitelisting
+  - Public LB and IP whitelisting
+  - Akka federation plane to Akka Kubernetes Engine
+  - Akka CLI to Akka Kubernetes Engine 
 - Your VPC Centralised HUB based `public ingress`
-  - Akka CLI, External Users and Services
+  - External Users and Services
 - Akka VPC `private egress` to Your VPC via peering
   - to internal services
 - Akka VPC `private ingress` from Your VPC via peering
@@ -36,26 +38,25 @@ graph TB
     subgraph AKKA_VPC[Akka VPC]
         subgraph AAO[Akka AAO]
             SRVS[Your Akka Services]
-            AKKA_MGMT[Akka Management]
+            AKKA_K8S[Akka Akka Kubernetes Engine]
         end
         CLOUD_NAT[Cloud NAT]
-        PUBLIC_LB[Public IP/LB <br>IP whitelisting]
-        INT_GW[Internet GW<br>0.0.0.0/0]
+        PUBLIC_LB[Public LB <br>IP whitelisting]
+%%        INT_GW[Internet GW<br>0.0.0.0/0]
         AKKA_PEERING[Peering]
     end
 
-   CLOUD_NAT --> |public<br>egress| INT_GW
-   INT_GW --> |public<br>egress| AKKA_FED_PLAN
-   INT_GW --> |public<br>egress| INT_SRVS
+   CLOUD_NAT --> |public<br>egress| AKKA_FED_PLAN
+   CLOUD_NAT --> |public<br>egress| INT_SRVS
    SRVS --> |public<br>egress| CLOUD_NAT
-   AKKA_MGMT --> |public<br>egress| CLOUD_NAT
+   AKKA_K8S --> |public<br>egress| CLOUD_NAT
 
    SRVS --> |private<br>egress| AKKA_PEERING
    AKKA_PEERING <--> CUST_PEERING
 
-   ADMIN --> |public<br>ingress|HUB
+   ADMIN --> |public<br>ingress|PUBLIC_LB
    AKKA_FED_PLAN --> |public<br>ingress|PUBLIC_LB
-   PUBLIC_LB --> |public<br>ingress|AKKA_MGMT
+   PUBLIC_LB --> |public<br>ingress|AKKA_K8S
 
    INT_SRVS --> |public<br>ingress|HUB
    USER --> |public<br>ingress|HUB
@@ -71,7 +72,7 @@ graph TB
 # Option 2 - Cloud NAT based egress, NO Akka VPC public ingress 
 
 - Akka VPC `public egress` via Cloud NAT and Internet GW
-  - Your Akka Services and Akka Management with reverse tunneling
+  - Your Akka Services and Akka Kubernetes Engine with reverse tunneling
 - **NO** Akka VPC `public ingress`
 - Your VPC Centralised HUB based `public ingress`
   - Akka CLI, External Users and Services
@@ -104,17 +105,17 @@ graph TB
     subgraph AKKA_VPC[Akka VPC]
         subgraph AAO[Akka AAO]
             SRVS[Your Akka Services]
-            AKKA_MGMT[Akka Management]
+            AKKA_K8S[Akka Kubernetes Engine]
         end
         CLOUD_NAT[Cloud NAT]
-        INT_GW[Internet GW<br>0.0.0.0/0]
+%%        INT_GW[Internet GW<br>0.0.0.0/0]
         AKKA_PEERING[Peering]
     end
 
-    AKKA_MGMT <--> |public<br>egress/ingress| CLOUD_NAT
-    CLOUD_NAT --> |public<br>egress| INT_GW
-    INT_GW --> |public<br>egress/ingress| AKKA_FED_PLAN
-    INT_GW --> |public<br>egress| INT_SRVS
+    AKKA_K8S <--> |public<br>egress<br>reverse tunneling| CLOUD_NAT
+%%    CLOUD_NAT --> |public<br>egress| INT_GW
+    CLOUD_NAT --> |public<br>egress<br>reverse tunneling| AKKA_FED_PLAN
+    CLOUD_NAT --> |public<br>egress| INT_SRVS
     SRVS --> |public<br>egress| CLOUD_NAT
 
     SRVS --> |private<br>egress| AKKA_PEERING
@@ -168,12 +169,12 @@ graph TB
     subgraph AKKA_VPC[Akka VPC]
         subgraph AAO[Akka AAO]
             SRVS[Your Akka Services]
-            AKKA_MGMT[Akka Management]
+            AKKA_K8S[Akka Kubernetes Engine]
         end
         AKKA_PEERING[Peering]
     end
 
-    AKKA_MGMT <-->  AKKA_PEERING
+    AKKA_K8S <-->  AKKA_PEERING
     HUB <--> AKKA_FED_PLAN
     HUB <--> INT_SRVS
 
